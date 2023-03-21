@@ -29,7 +29,7 @@ export default {
     },
     setup(props) {
         return {
-            appName: process.env.APP_NAME || "Laravel"
+            appName: process.env.APP_NAME || "Symfony"
         }
     }
 }

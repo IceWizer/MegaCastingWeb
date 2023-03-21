@@ -9,4 +9,6 @@
 /var/
 /vendor/
 /node_modules/*
+/config/jwt/
 ###< symfony/framework-bundle ###
+/config/jwt/

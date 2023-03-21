@@ -1,5 +1,5 @@
 <template>
-    <div class="row h-100 w-100">
+    <div class="h-100 w-100">
         <div class="col-md-2 overflow-hidden h-100" v-if="$route.meta.layout == 'default'">
             <SidebarMenu :menu="menu" />
         </div>
