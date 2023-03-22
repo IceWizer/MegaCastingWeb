@@ -10,5 +10,5 @@
 /vendor/
 /node_modules/*
 /config/jwt/
+/.idea/*
 ###< symfony/framework-bundle ###
-/config/jwt/

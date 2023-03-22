@@ -81,8 +81,8 @@ export default {
                 password: false,
             },
             validators: {
-                username: Yup.string().min(3, 'Username doit contenir au minimum 3 caractères').required('Le champ username est obligatoire'),
-                password: Yup.string().required('Le champ password est obligatoire'),
+                username: Yup.string().min(3, 'Le nom doit contenir au minimum 3 caractères').required('Le champ nom est obligatoire'),
+                password: Yup.string().required('Le champ mot de passe est obligatoire'),
             },
 
             showPassword: false,

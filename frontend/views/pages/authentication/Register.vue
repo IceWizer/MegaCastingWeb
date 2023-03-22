@@ -12,12 +12,12 @@
                             name="username"
                             id="username"
                             v-model="item.username"
-                            :state="stateOn.username ? validators.username.isValidSync(item.username) : null"
+                            :state="touch.username ? validateField('username') : null"
                             autocomplete="username"
-                            @focus="stateOn.username = true"
+                            @focus="touch.username = true"
                         />
                         <b-form-invalid-feedback>
-                            {{ getErrorMessage(validators.username, item.username) }}
+                            {{ getErrorMessage('user') }}
                         </b-form-invalid-feedback>
                     </div>
                     <div class="mt-2">
@@ -27,12 +27,12 @@
                             name="email"
                             id="email"
                             v-model="item.email"
-                            :state="stateOn.email ? validators.email.isValidSync(item.email) : null"
+                            :state="touch.email ? validateField('email') : null"
                             autocomplete="email"
-                            @focus="stateOn.email = true"
+                            @focus="touch.email = true"
                         />
                         <b-form-invalid-feedback>
-                            {{ getErrorMessage(validators.email, item.email) }}
+                            {{ getErrorMessage('email') }}
                         </b-form-invalid-feedback>
                     </div>
                     <div class="mt-2">
@@ -44,9 +44,9 @@
                                 id="password"
                                 rules="required"
                                 v-model="item.password"
-                                :state="stateOn.password ? validators.password.isValidSync(item.password) : null"
+                                :state="touch.password ? validateField('password') : null"
                                 autocomplete="current-password"
-                                @focus="stateOn.password = true"
+                                @focus="touch.password = true"
                             />
                             <b-input-group-append>
                                 <b-button @click="showPassword = !showPassword" size="sm" variant="outline-secondary" class="text-dark rounded-end">
@@ -55,9 +55,44 @@
                                 </b-button>
                             </b-input-group-append>
                             <b-form-invalid-feedback>
-                                {{ getErrorMessage(validators.password, item.password) }}
+                                {{ getErrorMessage('password') }}
                             </b-form-invalid-feedback>
                         </b-input-group>
+                    </div>
+                    <div class="mt-2">
+                        <label for="password">Confirmation du mot de passe</label>
+                        <b-input-group>
+                            <b-form-input
+                                :type="showPasswordConf ? 'text' : 'password'"
+                                name="password_conf"
+                                id="password_conf"
+                                rules="required"
+                                v-model="item.password_conf"
+                                :state="touch.password_conf ? validateField('password_conf') : null"
+                                autocomplete="password_conf"
+                                @focus="touch.password_conf = true"
+                            />
+                            <b-input-group-append>
+                                <b-button @click="showPasswordConf = !showPasswordConf" size="sm" variant="outline-secondary" class="text-dark rounded-end">
+                                    <b-icon-eye v-if="showPasswordConf" />
+                                    <b-icon-eye-slash v-else />
+                                </b-button>
+                            </b-input-group-append>
+                            <b-form-invalid-feedback>
+                                {{ getErrorMessage('password_conf') }}
+                            </b-form-invalid-feedback>
+                        </b-input-group>
+                    </div>
+                    <div class="mt-2">
+                        <b-form-checkbox
+                            id="accept_terms"
+                            name="accept_terms"
+                            v-model="item.accept_terms"
+                            :state="touch.accept_terms ? validateField('accept_terms') : null"
+                            @focus="touch.accept_terms = true"
+                        >
+                            J'accepte les <a href="#">conditions générales d'utilisation</a>
+                        </b-form-checkbox>
                     </div>
                     <div class="mt-3 d-flex justify-content-center">
                         <b-button class="p-1 px-2" type="submit" @click="registerCheck()" variant="primary">Créer ton compte</b-button>
@@ -74,7 +109,7 @@
 <script>
 import { useModules } from "@store/utils";
 import authStore from "@store/modules/authStore";
-import {onUnmounted} from "vue";
+import {onUnmounted, ref} from "vue";
 import * as Yup from "yup";
 
 export default {
@@ -84,12 +119,16 @@ export default {
             item: {
                 username: '',
                 email: '',
-                password: ''
+                password: '',
+                password_conf: '',
+                accept_terms: false,
             },
-            stateOn: {
+            touch: {
                 username: false,
                 email: false,
                 password: false,
+                password_conf: false,
+                accept_terms: false,
             },
             validators: {
                 username: Yup.string()
@@ -101,10 +140,14 @@ export default {
                 password: Yup.string()
                             .min(8, 'Le mot de passe doit avoir au minimum 8 caractères')
                             .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).*$/, 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)')
-                            .required('Le champ mot de passe est obligatoire')
+                            .required('Le champ mot de passe est obligatoire'),
+                password_conf: Yup.string(),
+                accept_terms: Yup.boolean()
+                            .oneOf([true], 'Vous devez accepter les conditions générales d\'utilisation')
             },
 
             showPassword: false,
+            showPasswordConf: false,
 
             errors: {}
         }
@@ -131,7 +174,7 @@ export default {
         registerCheck() {
             let canRegister = true;
             for (const [key, value] of Object.entries(this.item)) {
-                if (!this.stateOn[key] || this.getErrorMessage(this.validators[key], value) !== null) {
+                if (!this.touch[key] || this.getErrorMessage(this.validators[key], value) !== null) {
                     canRegister = false;
                 }
             }
@@ -147,12 +190,30 @@ export default {
                     this.$router.push({name: 'login'});
                 });
         },
-        getErrorMessage(validator, itemToValidate) {
+        getErrorMessage(field) {
             try {
-                validator.validateSync(itemToValidate);
+                if (field === 'password_conf') {
+                    this.validators[field]
+                        .oneOf([this.item.password], 'Les mots de passe ne correspondent pas')
+                        .required('Le champ confirmation du mot de passe est obligatoire')
+                        .validateSync(this.item[field]);
+                } else {
+                    this.validators[field].validateSync(this.item[field]);
+                }
+
                 return null;
             } catch (err) {
                 return err.message;
+            }
+        },
+        validateField(field) {
+            if (field === 'password_conf') {
+                return this.validators[field]
+                    .oneOf([this.item.password], 'Les mots de passe ne correspondent pas')
+                    .required('Le champ confirmation du mot de passe est obligatoire')
+                    .isValidSync(this.item[field]);
+            } else {
+                return this.validators[field].isValidSync(this.item[field]);
             }
         }
     }
