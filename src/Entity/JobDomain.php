@@ -24,7 +24,7 @@ class JobDomain
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
-    #[ORM\ManyToMany(targetEntity: Job::class, mappedBy: 'jobDomain')]
+    #[ORM\ManyToMany(targetEntity: Job::class, mappedBy: 'jobDomains')]
     private Collection $jobs;
 
     public function __construct()

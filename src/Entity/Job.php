@@ -24,16 +24,16 @@ class Job
     #[ORM\Column(length: 255)]
     private ?string $label = null;
 
-    #[ORM\JoinColumn(name: 'job_domain_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'job_id', referencedColumnName: 'id')]
     #[ORM\ManyToMany(targetEntity: JobDomain::class, inversedBy: 'jobs')]
-    private Collection $jobDomain;
+    private Collection $jobDomains;
 
     #[ORM\ManyToMany(targetEntity: CastingOffer::class, mappedBy: 'jobs')]
     private Collection $castingOffers;
 
     public function __construct()
     {
-        $this->jobDomain = new ArrayCollection();
+        $this->jobDomains = new ArrayCollection();
         $this->castingOffers = new ArrayCollection();
     }
 
@@ -57,15 +57,15 @@ class Job
     /**
      * @return Collection<int, JobDomain>
      */
-    public function getJobDomain(): Collection
+    public function getJobDomains(): Collection
     {
-        return $this->jobDomain;
+        return $this->jobDomains;
     }
 
     public function addJobDomain(JobDomain $jobDomain): self
     {
-        if (!$this->jobDomain->contains($jobDomain)) {
-            $this->jobDomain->add($jobDomain);
+        if (!$this->jobDomains->contains($jobDomain)) {
+            $this->jobDomains->add($jobDomain);
         }
 
         return $this;
@@ -73,7 +73,7 @@ class Job
 
     public function removeJobDomain(JobDomain $jobDomain): self
     {
-        $this->jobDomain->removeElement($jobDomain);
+        $this->jobDomains->removeElement($jobDomain);
 
         return $this;
     }

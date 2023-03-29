@@ -1,16 +1,24 @@
 <template>
-    <li class="nav-item w-100 p-1 me-1 mb-1">
-        <router-link :to="{name: item.routeName}" class="d-flex" @click="drop = !drop">
-            <feather-icon :type="(item.icon ? item.icon : 'user')" size="24" class="nav-icon"></feather-icon>
-            <p class="m-0 ms-1 me-auto">
+    <div
+        class="nav-item w-100 p-2 me-1 mb-1 border border-1 border-dark rounded"
+        :class="isHover ? 'bg-secondary' : 'bg-light'"
+        @mouseover="isHover = true"
+        @mouseleave="isHover = false"
+    >
+        <router-link :to="{name: item.routeName}" class="d-flex text-decoration-none" @click="drop = !drop">
+            <icon :type="(item.icon ? item.icon : 'PersonCircle')" :size=24 class="nav-icon" variant="dark"></icon>
+            <p
+                class="m-0 ms-1 me-auto text-decoration-none align-self-center"
+                :class="isHover ? 'text-light' : 'text-dark'"
+            >
                 {{ item.title }}
             </p>
-            <feather-icon :type="drop ? 'chevron-down' : 'chevron-right'" size="24" v-if="!item.routeName && item.children"></feather-icon>
+            <icon :type="drop ? 'ChevronDown' : 'ChevronRight'" :size=24 v-if="!item.routeName && item.children" variant="dark"></icon>
         </router-link>
-        <ul class="list-unstyled ms-3 mt-1" v-if="!item.routeName && item.children && drop">
+        <div class="list-unstyled ms-3 mt-1" v-if="!item.routeName && item.children && drop">
             <nav-item v-for="(child, index) in item.children" :key="index" :item="child" dropped></nav-item>
-        </ul>
-    </li>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -28,7 +36,8 @@ export default {
     },
     data() {
         return {
-            drop: false
+            drop: false,
+            isHover: false
         }
     },
 }

@@ -8,12 +8,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AppController extends AbstractController
 {
-    #[Route('/api/helloword/{name}', name: 'api_helloword')]
-    public function apiHelloword(string $name): Response
-    {
-        return new JsonResponse('hello ' . $name);
-    }
-
     #[Route('/{slug?}', name: 'app', requirements: ['slug' => '.+'], priority: -1)]
     public function app(): Response
     {

@@ -2,7 +2,7 @@ const tabs = [
     {
         title: 'Dashboard',
         routeName: 'dashboard',
-        icon: 'home',
+        icon: 'HouseFill',
         children: [
             {
                 title: 'Analytics',
@@ -16,7 +16,7 @@ const tabs = [
     },
     {
         title: 'test',
-        icon: 'home',
+        icon: 'HouseFill',
         children: [
             {
                 title: 'Register',

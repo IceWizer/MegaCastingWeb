@@ -21,7 +21,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    // chack if the route has requires auth
+    // check if the route has requires auth
     if (to.meta?.requiresAuth) {
         if (!isUserLoggedIn()) {
             next({ name: 'login' });

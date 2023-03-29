@@ -30,11 +30,6 @@ class Observer
     #[ORM\JoinColumn(nullable: false)]
     private ?BroadcastPartner $broadcastPartner = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getViewCount(): ?int
     {
         return $this->viewCount;

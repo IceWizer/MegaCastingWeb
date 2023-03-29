@@ -1,4 +1,5 @@
 import useModules from './useModules'
-import useCrud from './crud'
+import crud from './crud'
+import useCrud from './useCrud'
 
-export { useModules, useCrud}
+export { useModules, crud, useCrud}

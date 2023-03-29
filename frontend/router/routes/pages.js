@@ -4,7 +4,7 @@ export default [
         name: 'dashboard',
         component: () => import('../../views/dashboard/Dashboard.vue'),
         meta: {
-            requiresAuth: true,
+            requiresAuth: false,
             redirectIfLoggedIn: false,
             layout: 'default'
         }

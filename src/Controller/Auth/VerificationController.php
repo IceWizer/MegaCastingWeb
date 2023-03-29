@@ -24,7 +24,7 @@ class VerificationController extends AbstractController
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        $user->setEmailVerifiedAt(new \DateTime());
+        $user->setEmailVerifiedAt(new \DateTimeImmutable());
         $user->setVerificationToken(null);
 
         $security->login($user);

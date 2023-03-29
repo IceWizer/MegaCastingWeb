@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const apiRequest = (url, method = 'GET', onSuccess = () => {}, data = null) => {
-    url = 'api/' + url;
+const apiRequest = (url, method = 'GET', onSuccess = () => {}, data = null, headers = { 'accept': 'application/json' }) => {
+    url = '/api/' + url;
 
     if (!['GET', 'POST', 'PUT', 'DELETE'].includes(method)) {
         method = 'GET';
@@ -11,7 +11,8 @@ const apiRequest = (url, method = 'GET', onSuccess = () => {}, data = null) => {
         axios({
             url,
             method,
-            data
+            data,
+            headers
         })
             .then((response) => {
                 onSuccess && onSuccess(response);

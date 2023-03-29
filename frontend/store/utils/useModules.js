@@ -7,7 +7,7 @@ export default function useModules(modules) {
         }
     });
 
-    const umount = () => {
+    const unmount = () => {
         modules.forEach(m => {
             if (store.hasModule(m.store.name)) {
                 store.unregisterModule(m.store.name);
@@ -15,5 +15,5 @@ export default function useModules(modules) {
         });
     };
 
-    return { umount };
+    return { unmount };
 }

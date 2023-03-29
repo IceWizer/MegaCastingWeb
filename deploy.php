@@ -50,29 +50,21 @@ set('composer_options', " --verbose --prefer-dist --no-progress --no-interaction
 
 // Tasks
 task('set:env', function () {
-    upload(dirname(__FILE__).'/.env.prod.local', '{{release_path}}/.env.local');
+    upload(dirname(__FILE__).'/.env.prod.local', '/var/www/symfony/release/.env');
 });
 after('deploy:update_code', 'set:env');
 
-task('build_assets', function () {
-    //set('release_path',dirname(__FILE__));
-    runLocally('rm -Rf '.dirname(__FILE__)."/public/build");
-    runLocally('yarn build');
-})->once();
-after('deploy:update_code', 'build_assets');
-
-
-task('upload_assets', function () {
-    upload(dirname(__FILE__).'/public/build', '{{release_path}}/public');
+task('build:npm-composer', function () {
+    run('cd {{release_path}} && composer install --no-dev --optimize-autoloader');
+    run('cd {{release_path}} && npm install && npm run build');
 });
-after('deploy:cache:clear', 'upload_assets');
-
-//task('build:npm', function () {
-//    run('cd {{release_path}} && npm install --omit=dev');
-//});
-//after('deploy:update_code', 'build:npm');
+before('deploy:symlink', 'build:npm-composer');
 
 // Migrate database before symlink new release.
+task('database:create', function () {
+    run('{{bin/php}} {{bin/console}} doctrine:database:create --if-not-exists --env=prod');
+});
+before('database:migrate', 'database:create');
 before('deploy:symlink', 'database:migrate');
 
 
@@ -81,8 +73,8 @@ task('deploy', [
     'deploy:vendors',
     'deploy:cache:clear',
     'deploy:publish'
-])->desc('DÃ©ploiement de Megacasting');
+])->desc('Déploiement de Megacasting');
 
 // [Optional] if deploy fails automatically unlock.
-//after('deploy:failed', 'deploy:unlock');
+after('deploy:failed', 'deploy:unlock');
 

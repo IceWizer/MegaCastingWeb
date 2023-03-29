@@ -3,13 +3,13 @@
         class="h-100 bg-light"
     >
         <img
-            :src="require('@/assets/images/logo.jpg')"
+            :src="require('@/assets/images/logo.png')"
             alt="Logo"
-            class="p-1 w-100"
+            class="w-100"
         >
         <div class="w-100">
             <h3 class="text-muted ms-1">{{ appName }}</h3>
-            <nav-bar :menu="menu()" class="w-100 ms-2"></nav-bar>
+            <nav-bar :menu="menu()" class="w-100 p-1"></nav-bar>
         </div>
     </div>
 </template>
@@ -27,7 +27,7 @@ export default {
             required: true
         }
     },
-    setup(props) {
+    setup() {
         return {
             appName: process.env.APP_NAME || "Symfony"
         }

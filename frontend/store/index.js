@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 
-import authStore from './modules/authStore'
+import authStore from './modules/stores/authStore'
 
 export default new Vuex.Store({
     modules: {

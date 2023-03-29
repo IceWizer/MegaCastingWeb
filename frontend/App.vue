@@ -1,11 +1,13 @@
 <template>
-    <div class="container-fluid h-100">
-        <div class="col-md-2 overflow-hidden h-100" v-if="$route.meta.layout == 'default'">
-            <SidebarMenu :menu="menu" />
-        </div>
-        <div class="col h-100">
-            <RouterView />
-        </div>
+    <div class="container-fluid h-100 p-0">
+        <b-row class="h-100 w-100 p-0 m-0">
+            <b-col class="h-100 pb-1 px-0 col-md-2 border border-end border-0" v-if="$route.meta.layout == 'default'">
+                <SidebarMenu :menu="menu" />
+            </b-col>
+            <b-col class="h-100 p-2 mx-2">
+                <RouterView />
+            </b-col>
+        </b-row>
     </div>
 </template>
 

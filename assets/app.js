@@ -22,8 +22,9 @@ registerVueControllerComponents(require.context('./../frontend', true, /\.vue$/,
 
 import router from '../frontend/router';
 import store from '../frontend/store';
-import BootstrapVue from 'bootstrap-vue-next'
+import BootstrapVue from 'bootstrap-vue-next';
 import { BootstrapIconsPlugin } from 'bootstrap-icons-vue';
+import Icon from '../frontend/components/icon.vue';
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue-next/dist/bootstrap-vue-next.css'
@@ -34,4 +35,5 @@ app.use(router);
 app.use(store);
 app.use(BootstrapVue);
 app.use(BootstrapIconsPlugin);
+app.component('icon', Icon);
 app.mount('#app');

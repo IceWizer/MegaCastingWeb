@@ -108,8 +108,8 @@
 
 <script>
 import { useModules } from "@store/utils";
-import authStore from "@store/modules/authStore";
-import {onUnmounted, ref} from "vue";
+import authStore from "@store/modules/stores/authStore";
+import {onUnmounted} from "vue";
 import * as Yup from "yup";
 
 export default {
