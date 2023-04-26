@@ -9,8 +9,8 @@ require_once __DIR__.'/vendor/autoload.php';
 
 require 'recipe/symfony.php';
 set('env', [
-    'SYMFONY_ENV' => 'prod',
-    'APP_ENV' => 'prod'
+    'SYMFONY_ENV' => 'dev',
+    'APP_ENV' => 'dev'
 ]);
 
 $dotenv = new Dotenv();
@@ -46,7 +46,7 @@ add('shared_dirs', []);
 // Writable dirs by web server
 //add('writable_dirs', []);
 set('allow_anonymous_stats', false);
-set('composer_options', " --verbose --prefer-dist --no-progress --no-interaction --no-dev  --optimize-autoloader");
+set('composer_options', " --verbose --prefer-dist --no-progress --no-interaction  --optimize-autoloader");
 
 // Tasks
 task('set:env', function () {
@@ -55,16 +55,16 @@ task('set:env', function () {
 after('deploy:update_code', 'set:env');
 
 task('build:npm-composer', function () {
-    run('cd {{release_path}} && composer install --no-dev --optimize-autoloader');
+    run('cd {{release_path}} && composer install --optimize-autoloader');
     run('cd {{release_path}} && npm install && npm run build');
     run('sudo chmod 777 -R {{release_path}}');
-    run('sudo chown www-data:www-data -R {{release_path}}');
+    //run('sudo chown www-data:www-data -R {{release_path}}');
 });
 before('deploy:symlink', 'build:npm-composer');
 
 // Migrate database before symlink new release.
 task('database:create', function () {
-    run('{{bin/php}} {{bin/console}} doctrine:database:create --if-not-exists --env=prod');
+    run('{{bin/php}} {{bin/console}} doctrine:database:create --if-not-exists --env=dev');
 });
 before('database:migrate', 'database:create');
 before('deploy:symlink', 'database:migrate');
