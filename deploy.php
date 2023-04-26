@@ -57,6 +57,7 @@ after('deploy:update_code', 'set:env');
 task('build:npm-composer', function () {
     run('cd {{release_path}} && composer install --no-dev --optimize-autoloader');
     run('cd {{release_path}} && npm install && npm run build');
+    run('sudo chmod 777 -R {{release_path}}');
     run('sudo chown www-data:www-data -R {{release_path}}');
 });
 before('deploy:symlink', 'build:npm-composer');
