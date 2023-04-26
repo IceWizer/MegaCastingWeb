@@ -1,9 +1,18 @@
-import {getJwt, isJwtExpired} from "@/auth/utils/useJwt";
+import {getJwt, isJwtExpired, removeJwt} from "@/auth/utils/useJwt";
+import {getUserId, logout} from "./connection";
 
 const isUserLoggedIn = () => {
     const user = getUserData();
 
-    return !!user && !isJwtExpired();
+    let isLogged = !!user && !isJwtExpired() && !!getUserId();
+
+    if (!isLogged) {
+        removeUserData();
+        removeJwt();
+        logout();
+    }
+
+    return isLogged;
 }
 
 const getUserData = (isInRecursive = false) => {
@@ -28,7 +37,7 @@ const removeUserData = () => {
 
 const isUserAdmin = () => {
     const user = getUserData();
-    return user?.roles && user.roles.includes('ADMIN_ROLE');
+    return user?.roles && (user.roles.includes('ROLE_ADMIN') || user.roles.includes('ROLE_SUPER_ADMIN'));
 }
 
 export {

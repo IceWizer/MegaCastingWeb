@@ -16,7 +16,7 @@ export default [
         meta: {
             requiresAuth: false,
             redirectIfLoggedIn: true,
-            layout: 'full'
+            layout: 'default'
         }
     },
     {
@@ -26,7 +26,7 @@ export default [
         meta: {
             requiresAuth: false,
             redirectIfLoggedIn: true,
-            layout: 'full'
+            layout: 'default'
         }
     },
     {

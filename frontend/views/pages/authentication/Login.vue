@@ -110,9 +110,9 @@ export default {
                 this.dataSent = true;
         },
         sendLogin() {
-            this.$store.dispatch('authStore/login', this.item)
+            this.$store.dispatch('auth_store/login', this.item)
                 .then((response) => {
-                    login(response.data.token);
+                    login(response.token);
                     this.$router.push({ name: 'dashboard' });
                 })
                 .catch((error) => {

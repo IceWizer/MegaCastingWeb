@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
 use App\Repository\JobDomainRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -11,7 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     mercure: true,
     paginationClientItemsPerPage: true,
-    security: 'is_granted("ROLE_ADMIN")',
+    security: true || 'is_granted("ROLE_USER")',
+)]
+#[GetCollection(
+    security: 'true',
 )]
 #[ORM\Entity(repositoryClass: JobDomainRepository::class)]
 class JobDomain

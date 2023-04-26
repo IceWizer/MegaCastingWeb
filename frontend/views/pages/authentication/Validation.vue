@@ -7,7 +7,7 @@
 export default {
     name: "Validation",
     mounted() {
-        this.$store.dispatch('authStore/validate', this.$route.params.token)
+        this.$store.dispatch('auth_store/validate', this.$route.params.token)
             .then((response) => {
 
             })

@@ -1,8 +1,12 @@
 <template>
     <div class="container-fluid h-100 p-0">
         <b-row class="h-100 w-100 p-0 m-0">
-            <b-col class="h-100 pb-1 px-0 col-md-2 border border-end border-0" v-if="$route.meta.layout == 'default'">
-                <SidebarMenu :menu="menu" />
+            <b-col
+                class="p-0 col-12 col-xl-2 border"
+                :class="collapse ? 'sticky-top border-bottom border-0' : 'position-sticky vh-100 border-end border-0'"
+                v-if="$route.meta.layout === 'default'"
+            >
+                <SidebarMenu :menu="menu"/>
             </b-col>
             <b-col class="h-100 p-2 mx-2">
                 <RouterView />
@@ -18,17 +22,14 @@ import menu from './navigation/vertical'
 
 export default {
     name: "App.vue",
+    computed: {
+        collapse() {
+            return this.$store.getters['app_store/isSmall'];
+        }
+    },
     components: {
         RouterView,
         SidebarMenu
-    },
-    data() {
-        return {
-            window: {
-                width: 0,
-                height: 0
-            }
-        }
     },
     setup() {
         return {
@@ -44,15 +45,12 @@ export default {
     },
     methods: {
         handleResize() {
-            this.window.width = window.innerWidth;
-            this.window.height = window.innerHeight;
+            this.$store.dispatch('app_store/setWidth', window.innerWidth);
+            this.$store.dispatch('app_store/setHeight', window.innerHeight);
         }
-    }
+    },
 }
 </script>
 
 <style lang="scss">
-html, body, #app {
-    height: 100%;
-}
 </style>

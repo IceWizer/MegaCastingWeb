@@ -1,9 +1,8 @@
 import { apiRequest } from "@store/axios";
 
 export default ({
-    name: 'auth_store',
     state: {
-
+        user: null,
     },
     mutations: {
 
@@ -35,7 +34,9 @@ export default ({
         }
     },
     getters: {
-
+        getUser(state) {
+            return state.user;
+        }
     },
     namespaced: true,
 })

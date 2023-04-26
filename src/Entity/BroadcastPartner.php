@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     mercure: true,
     paginationClientItemsPerPage: true,
-    security: 'is_granted("ROLE_ADMIN")',
+    security: 'true',
 )]
 #[ORM\Entity(repositoryClass: BroadcastPartnerRepository::class)]
 class BroadcastPartner

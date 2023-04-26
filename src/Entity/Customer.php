@@ -9,26 +9,36 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
+    normalizationContext: [
+        'groups' => ['customer:read'],
+    ],
     mercure: true,
     paginationClientItemsPerPage: true,
+    security: true,
 )]
-#[Put(security: "is_granted('ROLE_ADMIN')")]
-#[Post(security: "is_granted('ROLE_ADMIN')")]
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
 class Customer
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: CustomerPacks::class, orphanRemoval: true)]
+    #[Groups(['customer:read'])]
     private Collection $customerPacks;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: CastingOffer::class, orphanRemoval: true)]
+    #[Groups(['customer:read'])]
     private Collection $castingOffers;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read'])]
+    private ?string $label = null;
 
     public function __construct()
     {
@@ -104,5 +114,17 @@ class Customer
     public function __toString(): string
     {
         return $this->id;
+    }
+
+    public function getLabel(): ?string
+    {
+        return $this->label;
+    }
+
+    public function setLabel(?string $label): self
+    {
+        $this->label = $label;
+
+        return $this;
     }
 }

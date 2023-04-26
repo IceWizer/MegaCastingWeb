@@ -16,46 +16,63 @@
                     <p>{{ item.profilDescription }}</p>
                 </div>
             </div>
+            <b-button v-if="isUserLoggedIn()" variant="primary" @click="isPostuler ? depostuler() : postuler()">{{ isPostuler ? "Dépostuler" : "Postuler" }}</b-button>
         </div>
     </div>
 </template>
 
 <script>
-import castingOfferStore from "@store/modules/stores/castingOfferStore";
-import {useModules} from "@store/utils";
-
-import {onBeforeUnmount} from "vue";
+import {isUserLoggedIn} from "@/auth/utils/useUserData";
+import {getUserId} from "../../auth/utils/connection";
 
 export default {
     name: "Show",
     data() {
         return {
-            item: {}
+            item: {},
+            isPostuler: false
         }
     },
     setup() {
-        const modules = [
-            {
-                store: castingOfferStore.store,
-                name: castingOfferStore.name,
-            }
-        ]
-
-        const {unmount} = useModules(modules)
-
-        onBeforeUnmount(unmount)
+        return {
+            isUserLoggedIn,
+            getUserId
+        }
     },
     mounted() {
         this.$store
             .dispatch('casting_offers_store/fetchItem', {id: this.$route.params.id})
             .then((response) => {
-                this.item = response.data;
+                this.item = response;
+                if (response?.users && response.users.length > 0) {
+                    response.users.forEach(user => {
+                        if (user.id === Number(getUserId())) {
+                            this.isPostuler = true;
+                        }
+                    })
+                }
             })
     },
     methods: {
         // Format date
         formatDate(date) {
             return new Date(date).toLocaleDateString();
+        },
+        // Postuler
+        postuler() {
+            this.$store
+                .dispatch('users_store/postuler', this.$route.params.id)
+                .then((response) => {
+                    this.isPostuler = true;
+                })
+        },
+        // Depostuler
+        depostuler() {
+            this.$store
+                .dispatch('users_store/depostuler', this.$route.params.id)
+                .then((response) => {
+                    this.isPostuler = false;
+                })
         }
     }
 }

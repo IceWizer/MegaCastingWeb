@@ -1,4 +1,5 @@
 import {apiRequest} from "../axios";
+import {integer} from "@vee-validate/rules";
 
 export default (modelName) => {
     return {
@@ -7,6 +8,12 @@ export default (modelName) => {
         state: {
             items: [],
             item: {},
+            pagination: {
+                page: 1,
+                perPage: 10,
+                total: 0,
+                totalPages: 0,
+            }
         },
         mutations: {
             SET_ITEMS(state, payload) {
@@ -14,7 +21,7 @@ export default (modelName) => {
                 // and update them
                 // Set updated items to state.items
                 state.items = state.items.map((item) => {
-                    let updatedItem = payload.find((p) => p.id === item.id);
+                    let updatedItem = payload['hydra:member'].find((p) => p.id === item.id);
                     if (updatedItem) {
                         return updatedItem;
                     }
@@ -22,11 +29,17 @@ export default (modelName) => {
                 });
 
                 // Add items to state.items that are not in state.items
-                payload.forEach((item) => {
+                payload['hydra:member'].forEach((item) => {
                     if (!state.items.find((i) => i.id === item.id)) {
                         state.items.push(item);
                     }
                 });
+
+                // Set pagination
+                if (payload['hydra:view']['hydra:last']) {
+                    state.pagination.totalPages = Number(payload['hydra:view']['hydra:last'].split('page=')[1]);
+                }
+                state.pagination.total = payload['hydra:totalItems'];
             },
             SET_ITEM(state, payload = {id: this.$router.params.id}) {
                 // Find item in state.items that is in payload
@@ -46,7 +59,7 @@ export default (modelName) => {
                     }
                     return item;
                 });
-            }
+            },
         },
         actions: {
             fetchItems({ commit }, payload) {
@@ -60,13 +73,18 @@ export default (modelName) => {
                 );
             },
             fetchItem({ commit }, payload) {
+                // Delete id from payload
+                let params;
+                params = {...payload};
+                delete params.id;
+
                 return new apiRequest(
                     modelName + '/' + payload.id,
                     'GET',
                     (response) => {
                         commit('SET_ITEM', response.data);
                     },
-                    payload
+                    params
                 );
             },
             createItem({ commit }, payload) {
@@ -106,6 +124,9 @@ export default (modelName) => {
             },
             getItem(state) {
                 return state.item;
+            },
+            getPagination(state) {
+                return state.pagination;
             }
         },
     }

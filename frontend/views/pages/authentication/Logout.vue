@@ -17,10 +17,10 @@ export default {
     },
     methods: {
         logout() {
-            this.$store.dispatch('authStore/logout')
+            this.$store.dispatch('auth_store/logout')
                 .then((response) => {
                     logout();
-                    this.$router.push({ name: 'login' });
+                    this.$router.push({ name: 'dashboard' });
                 })
                 .catch((error) => {
                     console.log(error);

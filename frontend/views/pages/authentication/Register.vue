@@ -67,10 +67,10 @@
                                 name="password_conf"
                                 id="password_conf"
                                 rules="required"
-                                v-model="item.password_conf"
-                                :state="touch.password_conf ? validateField('password_conf') : null"
+                                v-model="item.password_confirm"
+                                :state="touch.password_confirm ? validateField('password_confirm') : null"
                                 autocomplete="password_conf"
-                                @focus="touch.password_conf = true"
+                                @focus="touch.password_confirm = true"
                             />
                             <b-input-group-append>
                                 <b-button @click="showPasswordConf = !showPasswordConf" size="sm" variant="outline-secondary" class="text-dark rounded-end">
@@ -79,7 +79,7 @@
                                 </b-button>
                             </b-input-group-append>
                             <b-form-invalid-feedback>
-                                {{ getErrorMessage('password_conf') }}
+                                {{ getErrorMessage('password_confirm') }}
                             </b-form-invalid-feedback>
                         </b-input-group>
                     </div>
@@ -120,14 +120,14 @@ export default {
                 username: '',
                 email: '',
                 password: '',
-                password_conf: '',
+                password_confirm: '',
                 accept_terms: false,
             },
             touch: {
                 username: false,
                 email: false,
                 password: false,
-                password_conf: false,
+                password_confirm: false,
                 accept_terms: false,
             },
             validators: {
@@ -141,7 +141,7 @@ export default {
                             .min(8, 'Le mot de passe doit avoir au minimum 8 caractères')
                             .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).*$/, 'Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&)')
                             .required('Le champ mot de passe est obligatoire'),
-                password_conf: Yup.string(),
+                password_confirm: Yup.string(),
                 accept_terms: Yup.boolean()
                             .oneOf([true], 'Vous devez accepter les conditions générales d\'utilisation')
             },
@@ -158,11 +158,9 @@ export default {
                 store: authStore,
             }
         ]
-        const { umount } = useModules(modules);
+        const { unmount } = useModules(modules);
 
-        onUnmounted(() => {
-            umount();
-        });
+        onUnmounted(unmount);
 
         return {
             modules,
@@ -174,8 +172,9 @@ export default {
         registerCheck() {
             let canRegister = true;
             for (const [key, value] of Object.entries(this.item)) {
-                if (!this.touch[key] || this.getErrorMessage(this.validators[key], value) !== null) {
+                if (!this.touch[key] || this.getErrorMessage(key) !== null) {
                     canRegister = false;
+                    console.log('can not register', key, value)
                 }
             }
 
@@ -198,6 +197,7 @@ export default {
                         .required('Le champ confirmation du mot de passe est obligatoire')
                         .validateSync(this.item[field]);
                 } else {
+                    console.log('field', field, this.item[field], this.validators[field])
                     this.validators[field].validateSync(this.item[field]);
                 }
 
@@ -207,7 +207,7 @@ export default {
             }
         },
         validateField(field) {
-            if (field === 'password_conf') {
+            if (field === 'password_confirm') {
                 return this.validators[field]
                     .oneOf([this.item.password], 'Les mots de passe ne correspondent pas')
                     .required('Le champ confirmation du mot de passe est obligatoire')

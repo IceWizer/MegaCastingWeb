@@ -3,6 +3,8 @@ const path = require("path");
 
 const dotenv = require('dotenv');
 
+const { readdirSync } = require('fs');
+
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {

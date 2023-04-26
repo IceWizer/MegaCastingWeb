@@ -9,6 +9,7 @@ use App\Repository\CoordonateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     mercure: true,
@@ -22,39 +23,51 @@ class Coordonate
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['casting_offer:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['casting_offer:read'])]
     private ?string $webSite = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['casting_offer:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['casting_offer:read'])]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 20)]
+    #[Groups(['casting_offer:read'])]
     private ?string $FaxNumber = null;
 
     #[ORM\Column(length: 34)]
+    #[Groups(['casting_offer:read'])]
     private ?string $PostalLine1 = null;
 
     #[ORM\Column(length: 34)]
+    #[Groups(['casting_offer:read'])]
     private ?string $PostalLine2 = null;
 
     #[ORM\Column(length: 34)]
+    #[Groups(['casting_offer:read'])]
     private ?string $PostalLine3 = null;
 
     #[ORM\Column(length: 34)]
+    #[Groups(['casting_offer:read'])]
     private ?string $PostalLine4 = null;
 
     #[ORM\Column(length: 34)]
+    #[Groups(['casting_offer:read'])]
     private ?string $PostalLine5 = null;
 
     #[ORM\Column(length: 34)]
+    #[Groups(['casting_offer:read'])]
     private ?string $PostalLine6 = null;
 
     #[ORM\Column(length: 34)]
+    #[Groups(['casting_offer:read'])]
     private ?string $PostalLine7 = null;
 
     #[ORM\OneToMany(mappedBy: 'coordonate', targetEntity: CastingOffer::class)]

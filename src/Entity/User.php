@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ApiResource(
     mercure: true,
@@ -20,9 +25,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['casting_offer:read', 'casting_offer:show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['casting_offer:read'])]
     private ?string $username = null;
 
     #[ORM\Column]
@@ -46,6 +53,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $termAccepted = null;
+
+
+    #[ApiProperty(readableLink: true, writableLink: false)]
+    #[ORM\ManyToMany(targetEntity: CastingOffer::class, inversedBy: 'users')]
+    private Collection $offers;
+
+    public function __construct()
+    {
+        $this->offers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -161,6 +178,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTermAccepted(bool $termAccepted): self
     {
         $this->termAccepted = $termAccepted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CastingOffer>
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
+    public function addOffer(CastingOffer $offer): self
+    {
+        if (!$this->offers->contains($offer)) {
+            $this->offers->add($offer);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(CastingOffer $offer): self
+    {
+        $this->offers->removeElement($offer);
 
         return $this;
     }

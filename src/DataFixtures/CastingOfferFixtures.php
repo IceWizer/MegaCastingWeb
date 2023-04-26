@@ -6,6 +6,7 @@ use App\Entity\CastingOffer;
 use App\Entity\ContractType;
 use App\Entity\Coordonate;
 use App\Entity\Customer;
+use App\Entity\EmergencyLevel;
 use App\Entity\Job;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -22,6 +23,7 @@ class CastingOfferFixtures extends Fixture implements DependentFixtureInterface
         $customers = $manager->getRepository(Customer::class)->findAll();
         $contractTypes = $manager->getRepository(ContractType::class)->findAll();
         $jobs = $manager->getRepository(Job::class)->findAll();
+        $emergencyLevels = $manager->getRepository(EmergencyLevel::class)->findAll();
 
         // Create 1000 casting offers
         for ($i = 0; $i < 1000; $i++) {
@@ -39,6 +41,8 @@ class CastingOfferFixtures extends Fixture implements DependentFixtureInterface
             $castingOffer->setContractStartDate($faker->dateTimeBetween('-1 years', 'now'));
             $castingOffer->setCoordonate($coordinates[$i % (count($coordinates) || 1)]);
             $castingOffer->addJob($jobs[array_rand($jobs)]);
+            $castingOffer->setSponsor($faker->boolean(5));
+            $castingOffer->setEmergencyLevel($emergencyLevels[array_rand($emergencyLevels)]);
             $manager->persist($castingOffer);
         }
 
@@ -52,6 +56,7 @@ class CastingOfferFixtures extends Fixture implements DependentFixtureInterface
             ContractTypeFixtures::class,
             CoordonateFixtures::class,
             JobFixtures::class,
+            EmergencyLevelFixtures::class,
         ];
     }
 }

@@ -3,15 +3,17 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\JobRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     mercure: true,
     paginationClientItemsPerPage: true,
-    security: 'is_granted("ROLE_ADMIN")',
+    security: true || 'is_granted("ROLE_USER")',
 )]
 #[ORM\Entity(repositoryClass: JobRepository::class)]
 class Job
@@ -19,9 +21,11 @@ class Job
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['casting_offer:read', 'casting_offer:show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['casting_offer:read', 'casting_offer:show'])]
     private ?string $label = null;
 
     #[ORM\JoinColumn(name: 'job_id', referencedColumnName: 'id')]

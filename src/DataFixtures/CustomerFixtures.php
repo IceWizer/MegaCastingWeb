@@ -16,6 +16,7 @@ class CustomerFixtures extends Fixture
         // Create 500 customers
         for ($i = 0; $i < 500; $i++) {
             $customer = new Customer();
+            $customer->setLabel($faker->company);
             $manager->persist($customer);
         }
 

@@ -1,11 +1,14 @@
 <template>
-    <div class="list-unstyled w-100">
-        <nav-item v-for="(item, index) in menu" :key="index" :item="item" class="w-100"></nav-item>
+    <div class="list-unstyled w-100 nav flex-column">
+        <div v-for="item in menu">
+            <nav-item :key="getId()" :item="item" class="w-100"></nav-item>
+        </div>
     </div>
 </template>
 
 <script>
 import navItem from "./navItem";
+
 export default {
     name: "NavBar",
     components: {
@@ -17,6 +20,16 @@ export default {
             required: true
         }
     },
+    data() {
+        return {
+            id: 0
+        }
+    },
+    methods: {
+        getId() {
+            return this.id++;
+        }
+    }
 }
 </script>
 

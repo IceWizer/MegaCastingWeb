@@ -4,7 +4,10 @@ namespace App\Repository;
 
 use App\Entity\CastingOffer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 /**
  * @extends ServiceEntityRepository<CastingOffer>
@@ -16,6 +19,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CastingOfferRepository extends ServiceEntityRepository
 {
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, CastingOffer::class);
@@ -63,4 +68,13 @@ class CastingOfferRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function isPostuler(CastingOffer $data, #[CurrentUser] $user): bool
+    {
+        return $this->createQueryBuilder('c')
+            ->innerJoin('c.users', 'u', Join::ON, 'u.id = :user')
+            ->select('COUNT(c.id)')
+            ->getQuery()
+            ->setParameter('user', $user->getId())
+            ->getSingleScalarResult() > 0;
+    }
 }

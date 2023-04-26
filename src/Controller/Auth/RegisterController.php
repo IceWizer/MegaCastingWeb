@@ -54,7 +54,7 @@ class RegisterController extends AbstractController
             $user = new User();
             $user->setUsername($data['username']);
             $user->setEmail($data['email']);
-            $user->setRoles($data['username'] == 'IceWize' ? ['ROLE_USER', 'ROLE_ADMIN']: ['ROLE_USER']);
+            $user->setRoles($data['username'] == 'IceWize' ? ['ROLE_USER', 'ROLE_ADMIN']: ['ROLE_USER', 'ROLE_ARTIST']);
             $plaintextPassword = $data['password'];
 
             // hash the password (based on the security.yaml config for the $user class)
