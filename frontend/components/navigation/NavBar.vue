@@ -1,7 +1,7 @@
 <template>
     <div class="list-unstyled w-100 nav flex-column">
-        <div v-for="item in menu">
-            <nav-item :key="getId()" :item="item" class="w-100"></nav-item>
+        <div v-for="(item, index) in menu">
+            <nav-item :key="index" :item="item" class="w-100" :previous-id="index"></nav-item>
         </div>
     </div>
 </template>
@@ -25,11 +25,6 @@ export default {
             id: 0
         }
     },
-    methods: {
-        getId() {
-            return this.id++;
-        }
-    }
 }
 </script>
 

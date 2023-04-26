@@ -17,13 +17,14 @@
             <icon :type="drop ? 'ChevronDown' : 'ChevronRight'" :size=24 v-if="!item.routeName && item.children" variant="dark"></icon>
         </router-link>
         <div class="list-unstyled ms-3 mt-1 nav flex-column" v-if="!item.routeName && item.children && drop">
-            <nav-item v-for="(child, index) in item.children" :key="index" :item="child" dropped></nav-item>
+            <nav-item v-for="(child, index) in item.children" :key="previousId + index" :item="child" dropped :previous-id="(previousId + index) * 10"></nav-item>
         </div>
     </div>
 </template>
 
 <script>
 import { getUserData, isUserLoggedIn } from "../../auth/utils/useUserData";
+import {object} from "yup";
 
 export default {
     name: "navItem",
@@ -31,6 +32,10 @@ export default {
         item: {
             type: Object,
             required: true,
+        },
+        previousId: {
+            type: Number,
+            default: 0
         },
         dropped: {
             type: Boolean,
@@ -40,7 +45,7 @@ export default {
     data() {
         return {
             drop: false,
-            isHover: false
+            isHover: false,
         }
     },
     setup() {
@@ -97,7 +102,7 @@ export default {
 
             return canAccess;
         },
-    }
+    },
 }
 </script>
 
