@@ -25,7 +25,7 @@ class Customer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read', 'user:show'])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'customer', targetEntity: CustomerPacks::class, orphanRemoval: true)]
@@ -37,7 +37,7 @@ class Customer
     private Collection $castingOffers;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read', 'user:show'])]
     private ?string $label = null;
 
     public function __construct()

@@ -16,7 +16,7 @@
                     <p>{{ item.profilDescription }}</p>
                 </div>
             </div>
-            <b-button v-if="isUserLoggedIn()" variant="primary" @click="isPostuler ? depostuler() : postuler()">{{ isPostuler ? "Dépostuler" : "Postuler" }}</b-button>
+            <b-button v-if="isUserLoggedIn()" variant="primary" @click="item.postuler ? depostuler() : postuler()">{{ item.postuler ? "Dépostuler" : "Postuler" }}</b-button>
         </div>
     </div>
 </template>
@@ -30,7 +30,6 @@ export default {
     data() {
         return {
             item: {},
-            isPostuler: false
         }
     },
     setup() {
@@ -63,7 +62,7 @@ export default {
             this.$store
                 .dispatch('users_store/postuler', this.$route.params.id)
                 .then((response) => {
-                    this.isPostuler = true;
+                    this.item.postuler = true;
                 })
         },
         // Depostuler
@@ -71,7 +70,7 @@ export default {
             this.$store
                 .dispatch('users_store/depostuler', this.$route.params.id)
                 .then((response) => {
-                    this.isPostuler = false;
+                    this.item.postuler = false;
                 })
         }
     }

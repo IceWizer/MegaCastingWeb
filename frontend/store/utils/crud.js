@@ -36,7 +36,7 @@ export default (modelName) => {
                 });
 
                 // Set pagination
-                if (payload['hydra:view']['hydra:last']) {
+                if (payload['hydra:view'] && payload['hydra:view']['hydra:last']) {
                     state.pagination.totalPages = Number(payload['hydra:view']['hydra:last'].split('page=')[1]);
                 }
                 state.pagination.total = payload['hydra:totalItems'];

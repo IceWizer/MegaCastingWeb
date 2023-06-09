@@ -1,38 +1,50 @@
 import axios from "axios";
+import {getJwt} from "../../auth/utils/useJwt";
 
-const apiRequest = (url, method = 'GET', onSuccess = () => {}, data = null, headers = { 'accept': 'application/ld+json' }) => {
-    url = '/api/' + url;
-
-    if (!['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
-        method = 'GET';
-    }
-
-    if (method === 'GET') {
-        // Format data to query string
-        let queryString = '';
-        if (data) {
-            queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
+const apiRequest = (
+    url,
+    method = 'GET',
+    onSuccess = () => {},
+    data = null,
+    headers =
+        {
+            'accept': 'application/ld+json',
+            'Authorization': 'Bearer ' + getJwt()
         }
-        if (queryString) {
-            url += '?' + queryString;
-        }
-    }
+    ) => {
+        url = '/api/' + url;
 
-    return new Promise((resolve, reject) => {
-        axios({
-            url,
-            method,
-            data: data,
-            headers
-        })
-            .then((response) => {
-                onSuccess && onSuccess(response);
-                resolve(response.data['hydra:member'] || response.data || response);
+        if (!['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].includes(method)) {
+            method = 'GET';
+        }
+
+        if (method === 'GET') {
+            // Format data to query string
+            let queryString = '';
+            if (data) {
+                queryString = Object.keys(data).map(key => key + '=' + data[key]).join('&');
+            }
+            if (queryString) {
+                url += '?' + queryString;
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            axios({
+                url,
+                method,
+                data: data,
+                headers
             })
-            .catch((error) => {
-                reject(error);
-            });
-    });
+                .then((response) => {
+                    onSuccess && onSuccess(response);
+                    resolve(response.data['hydra:member'] || response.data || response);
+                })
+                .catch((error) => {
+                    reject(error);
+                });
+        }
+    );
 }
 
 export {

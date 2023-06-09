@@ -6,7 +6,8 @@ import castingOfferStore from './modules/stores/castingOfferStore'
 import contractTypeStore from "./modules/stores/contractTypeStore";
 import jobDomainStore from "./modules/stores/jobDomainStore";
 import jobStore from "./modules/stores/jobStore";
-import userStore from './modules/stores/userStore'
+import packStore from "./modules/stores/packStore";
+import userStore from './modules/stores/userStore';
 
 export default new Vuex.Store({
     modules: {
@@ -16,6 +17,7 @@ export default new Vuex.Store({
         contract_types_store: contractTypeStore.store,
         job_domains_store: jobDomainStore.store,
         jobs_store: jobStore.store,
+        packs_store: packStore.store,
         users_store: userStore.store,
     },
 })

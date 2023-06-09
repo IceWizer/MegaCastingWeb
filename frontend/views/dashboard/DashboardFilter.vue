@@ -3,7 +3,7 @@
         <h2>Filtre</h2>
         <!-- Jobdomain -->
         <div class="d-flex flex-row">
-            <div class="mx-2">
+            <div class="mx-2 col-3">
                 <b-form-floating-label>Domaine d'activité</b-form-floating-label>
                 <b-form-select v-model="filters.jobdomain" @input="fetch()">
                     <option value="null" selected></option>
@@ -16,7 +16,7 @@
                 </b-form-select>
             </div>
             <!-- Job -->
-            <div class="mx-2">
+            <div class="mx-2 col-3">
                 <b-form-floating-label>Métier</b-form-floating-label>
                 <b-form-select v-model="filters.job" @input="fetch()" :disabled="filters.jobdomain === null || filters.jobdomain === undefined || filters.jobdomain === 'null'">
                     <option value="null" selected></option>
@@ -29,7 +29,7 @@
                 </b-form-select>
             </div>
             <!-- Contract type -->
-            <div class="mx-2">
+            <div class="mx-2 col-3">
                 <b-form-floating-label>Type de contrat</b-form-floating-label>
                 <b-form-select v-model="filters.contractType" @input="fetch()">
                     <option value="null" selected></option>
@@ -41,7 +41,7 @@
                     </option>
                 </b-form-select>
             </div>
-            <div>
+            <div class="mx-2 col-1">
                 <b-button class="mt-4" variant="danger" @click="resetFilters">Réinitialiser</b-button>
             </div>
         </div>

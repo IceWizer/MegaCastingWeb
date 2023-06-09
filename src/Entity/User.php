@@ -25,14 +25,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['casting_offer:read', 'casting_offer:show'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'user:show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
-    #[Groups(['casting_offer:read'])]
+    #[Groups(['casting_offer:read', 'user:show'])]
     private ?string $username = null;
 
     #[ORM\Column]
+    #[Groups(['user:show'])]
     private array $roles = [];
 
     /**
@@ -43,6 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['user:show'])]
     private ?string $email = null;
 
     #[ORM\Column(nullable: true)]
@@ -57,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ApiProperty(readableLink: true, writableLink: false)]
     #[ORM\ManyToMany(targetEntity: CastingOffer::class, inversedBy: 'users')]
+    #[Groups(['user:show'])]
     private Collection $offers;
 
     public function __construct()

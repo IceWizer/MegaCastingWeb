@@ -1,28 +1,28 @@
 <template>
     <div>
 
-    <h1>Accueil</h1>
-    <DashboardFilter :filters-options="filtersOptions" :filters="filters" @update:filters="reload()"/>
-    <div class="bg-light rounded border border-1 p-3 mt-4">
-        <b-pagination
-            v-model="currentPage"
-            :total-rows="pagination.total"
-            :per-page="pagination.itemsPerPage"
-        ></b-pagination>
-        <div class="d-flex flex-wrap justify-content-start my-4 p-3 rounded border border-1">
-            <item
-                :item="object"
-                v-for="object in objects"
-                :key="object.id"
-                class="m-1"
-            ></item>
+        <h1>Accueil</h1>
+        <DashboardFilter :filters-options="filtersOptions" :filters="filters" @update:filters="reload()"/>
+        <div class="bg-light rounded border border-1 p-3 mt-4">
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="pagination.total"
+                :per-page="pagination.itemsPerPage"
+            ></b-pagination>
+            <div class="d-flex flex-wrap justify-content-start my-4 p-3 rounded border border-1">
+                <item
+                    :item="object"
+                    v-for="object in objects"
+                    :key="object.id"
+                    class="m-1"
+                ></item>
+            </div>
+            <b-pagination
+                v-model="currentPage"
+                :total-rows="pagination.total"
+                :per-page="pagination.itemsPerPage"
+            ></b-pagination>
         </div>
-        <b-pagination
-            v-model="currentPage"
-            :total-rows="pagination.total"
-            :per-page="pagination.itemsPerPage"
-        ></b-pagination>
-    </div>
     </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
 
             pagination: {
                 page: 1,
-                itemsPerPage: 30,
+                perPage: 30,
                 total: 0,
                 pages: 2,
             }
@@ -66,7 +66,7 @@ export default {
             return this.pagination.pages;
         },
         perPage() {
-            return this.pagination.itemsPerPage;
+            return this.pagination.perPage;
         },
         currentPage: {
             get() {
@@ -100,7 +100,7 @@ export default {
     methods: {
         reload() {
             this.$store
-                .dispatch('casting_offers_store/index', { ...this.filters, page: this.pagination.page, itemsPerPage: this.pagination.itemsPerPage })
+                .dispatch('casting_offers_store/index', { ...this.filters, page: this.pagination.page, itemsPerPage: this.pagination.perPage })
                 .then((response) => {
                     this.objects = response.data;
                     this.pagination.total = response.pagination.total;

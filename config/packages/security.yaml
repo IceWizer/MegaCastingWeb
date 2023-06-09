@@ -13,10 +13,17 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        api:
+            pattern: ^/api(!/auth)
+            stateless: true
             lazy: true
             provider: app_user_provider
-
+            jwt: ~
+        app:
+            pattern: ^/
+            lazy: true
+                
+            provider: app_user_provider
             json_login:
                 # api_login is a route we will create below
                 check_path: api_login
@@ -30,15 +37,16 @@ security:
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
-        api:
-            pattern: ^/api
-            stateless: true
-            jwt: ~
+        
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/,     roles: PUBLIC_ACCESS }
+    
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
 when@test:
     security:

@@ -1,8 +1,13 @@
 const tabs = [
     {
-        title: 'Dashboard',
+        title: 'Accueil',
         routeName: 'dashboard',
         icon: 'HouseFill',
+    },
+    {
+        title: 'Packs',
+        routeName: 'pack-list',
+        icon: 'Boxes',
     },
     {
         title: 'Mon profil',
@@ -12,28 +17,22 @@ const tabs = [
         securityOperator: 'AND'
     },
     {
-        title: 'Connexion',
-        icon: 'HouseFill',
-        children: [
-            {
-                title: 'Register',
-                routeName: 'register',
-                security: ['NOT_FULLY_AUTHENTICATED'],
-                securityOperator: 'AND'
-            },
-            {
-                title: 'Login',
-                routeName: 'login',
-                security: ['NOT_FULLY_AUTHENTICATED'],
-                securityOperator: 'AND'
-            },
-            {
-                title: 'Logout',
-                routeName: 'logout',
-                security: ['FULLY_AUTHENTICATED'],
-                securityOperator: 'AND'
-            }
-        ]
+        title: 'Nous rejoindre',
+        routeName: 'register',
+        security: ['NOT_FULLY_AUTHENTICATED'],
+        securityOperator: 'AND'
+    },
+    {
+        title: 'Se connecter',
+        routeName: 'login',
+        security: ['NOT_FULLY_AUTHENTICATED'],
+        securityOperator: 'AND'
+    },
+    {
+        title: 'Se déconnecter',
+        routeName: 'logout',
+        security: ['FULLY_AUTHENTICATED'],
+        securityOperator: 'AND'
     }
 ]
 

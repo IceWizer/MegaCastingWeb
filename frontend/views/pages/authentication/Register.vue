@@ -4,7 +4,7 @@
             <h1 class="text-center h1 mb-3">{{ app_name }}</h1>
             <div class="bg-light rounded p-5">
                 <h2 class="text-center">Création de compte</h2>
-                <b-form style="width: 600px">
+                <b-form style="width: 400px">
                     <div class="mt-2">
                         <label for="username">Nom</label>
                         <b-form-input
@@ -174,14 +174,11 @@ export default {
             for (const [key, value] of Object.entries(this.item)) {
                 if (!this.touch[key] || this.getErrorMessage(key) !== null) {
                     canRegister = false;
-                    console.log('can not register', key, value)
                 }
             }
 
             if (canRegister)
                 this.sendRegister();
-            else
-                console.log('can not register');
         },
         sendRegister() {
             this.$store.dispatch('auth_store/register', this.item)
@@ -197,7 +194,6 @@ export default {
                         .required('Le champ confirmation du mot de passe est obligatoire')
                         .validateSync(this.item[field]);
                 } else {
-                    console.log('field', field, this.item[field], this.validators[field])
                     this.validators[field].validateSync(this.item[field]);
                 }
 

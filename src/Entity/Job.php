@@ -11,6 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: [
+                'groups' => ['job:read'],
+            ],
+            security: 'true'
+        ),
+    ],
     mercure: true,
     paginationClientItemsPerPage: true,
     security: true || 'is_granted("ROLE_USER")',
@@ -21,11 +29,11 @@ class Job
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['casting_offer:read', 'casting_offer:show'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'job:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['casting_offer:read', 'casting_offer:show'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'job:read'])]
     private ?string $label = null;
 
     #[ORM\JoinColumn(name: 'job_id', referencedColumnName: 'id')]

@@ -3,16 +3,45 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CastingPackOfferRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: [
+                'groups' => ['casting_pack_offer:read'],
+            ],
+            security: 'true'
+        ),
+        new Get(
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Post(
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Put(
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Patch(
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Delete(
+            security: 'is_granted("ROLE_ADMIN")'
+        )
+    ],
     mercure: true,
     paginationClientItemsPerPage: true,
-    security: 'is_granted("ROLE_ADMIN")',
 )]
 #[ORM\Entity(repositoryClass: CastingPackOfferRepository::class)]
 class CastingPackOffer
@@ -20,18 +49,23 @@ class CastingPackOffer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['casting_pack_offer:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['casting_pack_offer:read'])]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[Groups(['casting_pack_offer:read'])]
     private ?string $price = null;
 
     #[ORM\Column]
+    #[Groups(['casting_pack_offer:read'])]
     private ?int $duration = null;
 
     #[ORM\Column]
+    #[Groups(['casting_pack_offer:read'])]
     private ?int $castingNumber = null;
 
     #[ORM\OneToMany(mappedBy: 'castingPackOffer', targetEntity: CustomerPacks::class, orphanRemoval: true)]

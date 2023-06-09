@@ -24,7 +24,7 @@ class UserController extends AbstractController
             return $this->json(['message' => 'User not found'], 404);
         }
 
-        return $this->json(['message' => 'ok', 'profile' => $profile], 200);
+        return $this->json(['message' => 'ok', 'profile' => $profile], 200, [], ['groups' => 'user:show']);
     }
 
     #[Route('/postuler/{id}', name: 'postuler', requirements: ['id' => '\d+'], methods: ['PATCH'])]

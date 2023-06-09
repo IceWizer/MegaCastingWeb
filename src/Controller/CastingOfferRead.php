@@ -6,14 +6,15 @@ use App\Repository\CastingOfferRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[AsController]
 #[Route('/api/casting_offers', name: 'api_casting_offer_')]
-class CastingOfferController extends AbstractController
+class CastingOfferRead extends AbstractController
 {
     #[Route('/index', name: 'index', methods: ['GET'], priority: 2)]
     public function index(Request $request, CastingOfferRepository $repo): Response
@@ -58,7 +59,7 @@ class CastingOfferController extends AbstractController
         $page = isset($data['page']) ? (int) $data['page'] : 1;
         $limit = isset($data['limit']) ? (int) $data['limit'] : 30;
 
-        return $this->json($this->executeQueryWithPaginator($query, $page, $limit));
+        return $this->json($this->executeQueryWithPaginator($query, $page, $limit), 200, [], ['groups' => 'casting_offer:show']);
     }
 
     private function executeQueryWithPaginator(QueryBuilder $query, int $page, int $limit): array

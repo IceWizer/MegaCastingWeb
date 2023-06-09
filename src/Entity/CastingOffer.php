@@ -2,36 +2,43 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Doctrine\Odm\Filter\ExistsFilter;
-use ApiPlatform\Metadata\ApiFilter;
-use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
-use App\EntityRepresentation\CastingOfferRepresentation;
-use App\EntityRepresentation\CastingOfferRepresentationProcessor;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Repository\CastingOfferRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints\Expression;
 
 #[ApiResource(
-    normalizationContext: [
-        'groups' => ['casting_offer:read'],
+    operations: [
+        new GetCollection(
+            normalizationContext: [
+                'groups' => ['casting_offer:read'],
+            ],
+            security: 'true'
+        ),
+        new Post(
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Delete(
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Patch(
+            security: 'is_granted("ROLE_ADMIN")'
+        ),
+        new Put(
+            security: 'is_granted("ROLE_ADMIN")'
+        )
     ],
     mercure: true,
     paginationClientItemsPerPage: true,
-)]
-#[Get(
-    output: CastingOfferRepresentation::class,
-    processor: CastingOfferRepresentationProcessor::class,
 )]
 #[ORM\Entity(repositoryClass: CastingOfferRepository::class)]
 class CastingOffer
@@ -39,11 +46,11 @@ class CastingOffer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read', 'user:show'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'customer:read', 'user:show'])]
     private ?string $label = null;
 
     #[ORM\Column(length: 255)]
@@ -71,11 +78,11 @@ class CastingOffer
     private ?string $location = null;
 
     #[ORM\Column(length: 4096)]
-    #[Groups(['customer:read', 'casting_offer:show'])]
+    #[Groups(['casting_offer:read', 'customer:read', 'casting_offer:show'])]
     private ?string $jobDescription = null;
 
     #[ORM\Column(length: 4096)]
-    #[Groups(['customer:read', 'casting_offer:show', 'customer:show'])]
+    #[Groups(['casting_offer:read', 'customer:read', 'casting_offer:show', 'customer:show'])]
     private ?string $profilDescription = null;
 
     #[ORM\ManyToOne(inversedBy: 'castingOffers')]
@@ -85,7 +92,7 @@ class CastingOffer
 
     #[ORM\ManyToOne(inversedBy: 'castingOffers')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['casting_offer:read', 'casting_offer:show'])]
+    #[Groups(['casting_offer:read', 'casting_offer:show', 'user:show'])]
     private ?Customer $customer = null;
 
     #[ORM\ManyToOne]
@@ -111,19 +118,16 @@ class CastingOffer
     #[Groups(['casting_offer:read', 'casting_offer:show'])]
     private ?EmergencyLevel $emergencyLevel = null;
 
-    /**
-     * Dynamically added property to check if the current user has already applied to this offer.
-     * @var bool|null
-     */
-    //#[ApiProperty(readable: true, writable: false, identifier: false)]
-    #[Groups(['casting_offer:read', 'casting_offer:show'])]
-    private ?bool $postuler = false;
 
-    public function __construct(Security $security)
+    public function __construct(
+        private ?Security $security
+    )
     {
         $this->jobs = new ArrayCollection();
         $this->observers = new ArrayCollection();
         $this->users = new ArrayCollection();
+
+        echo 'test';
     }
 
     public function getId(): ?int
@@ -380,15 +384,9 @@ class CastingOffer
         return $this;
     }
 
-    private function isPostuler(): bool
+    #[Groups(['casting_offer:show'])]
+    public function isPostuler(): bool
     {
-        // Get the current user
-        $user = null;
-
-        if ($user instanceof User) {
-            return $this->users->contains($user);
-        }
-
-        return false;
+        return $this->security !== null && $this->users->contains($this->security->getUser());
     }
 }
